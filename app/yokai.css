@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Be+Vietnam+Pro:wght@500;700;800&display=swap');
+
+.yk-display {
+  font-family: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  letter-spacing: -0.01em;
+}
+
+.yk-ui {
+  font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+}
+
+/* Khung vàng hồ ly có góc cong kiểu Japanese fantasy */
+.yk-frame {
+  position: relative;
+}
+.yk-frame::before,
+.yk-frame::after,
+.yk-frame > .yk-corner-bl,
+.yk-frame > .yk-corner-br {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  z-index: 5;
+  border: 2px solid #f5b942;
+  filter: drop-shadow(0 0 6px rgba(245, 185, 66, 0.55));
+}
+.yk-frame::before {
+  top: 7px;
+  left: 7px;
+  border-right: 0;
+  border-bottom: 0;
+  border-top-left-radius: 12px;
+}
+.yk-frame::after {
+  top: 7px;
+  right: 7px;
+  border-left: 0;
+  border-bottom: 0;
+  border-top-right-radius: 12px;
+}
+.yk-frame > .yk-corner-bl {
+  bottom: 7px;
+  left: 7px;
+  border-right: 0;
+  border-top: 0;
+  border-bottom-left-radius: 12px;
+}
+.yk-frame > .yk-corner-br {
+  bottom: 7px;
+  right: 7px;
+  border-left: 0;
+  border-top: 0;
+  border-bottom-right-radius: 12px;
+}
+
+/* Nút xuất trận: vệt sáng quét qua nhẹ nhàng */
+@keyframes yk-sheen {
+  0%, 70% { transform: translateX(-130%) skewX(-20deg); }
+  100% { transform: translateX(260%) skewX(-20deg); }
+}
+.yk-launch {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.yk-launch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 38%;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: yk-sheen 3.4s ease-in-out infinite;
+}
+
+@keyframes yk-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.yk-bob {
+  animation: yk-bob 3.6s ease-in-out infinite;
+}
+
+@keyframes yk-ember {
+  0%, 100% { box-shadow: 0 0 8px 1px rgba(245, 185, 66, 0.5); }
+  50% { box-shadow: 0 0 14px 3px rgba(244, 63, 94, 0.6); }
+}
+.yk-ember {
+  animation: yk-ember 2.4s ease-in-out infinite;
+}
+
+@keyframes yk-load-fill {
+  from { background-position: 0 0; }
+  to { background-position: 48px 0; }
+}
+.yk-load-fill {
+  background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.28) 0 10px, transparent 10px 24px),
+    linear-gradient(90deg, #f59e0b, #fcd34d);
+  background-size: 48px 100%, 100% 100%;
+  animation: yk-load-fill 0.9s linear infinite;
+}
+
+@keyframes yk-pop {
+  0% { transform: scale(0.82); opacity: 0; }
+  65% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.yk-pop {
+  animation: yk-pop 0.22s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+@keyframes yk-heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.yk-heart-live {
+  animation: yk-heartbeat 1.5s ease-in-out infinite;
+}
+
+.yk-scroll-none::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yk-launch::after,
+  .yk-bob,
+  .yk-ember,
+  .yk-load-fill,
+  .yk-heart-live,
+  .yk-pop {
+    animation: none !important;
+  }
+}
+.yk-reduced-fx .yk-launch::after,
+.yk-reduced-fx .yk-bob,
+.yk-reduced-fx .yk-ember,
+.yk-reduced-fx .yk-heart-live,
+.yk-reduced-fx .yk-pop {
+  animation: none !important;
+}
+
+body.yokai-playing {
+  overflow: hidden !important;
+  touch-action: none;
+}
+body.yokai-playing header,
+body.yokai-playing nav,
+body.yokai-playing .nq-tabbar,
+body.yokai-playing [data-intro] {
+  display: none !important;
+}
+
+/* Wagara (Japanese traditional patterns) */
+.bg-wagara-seigaiha {
+  background-image: radial-gradient(circle at 50% 100%, rgba(245, 185, 66, 0.08) 12%, transparent 13%),
+    radial-gradient(circle at 50% 100%, transparent 24%, rgba(245, 185, 66, 0.08) 25%, rgba(245, 185, 66, 0.08) 36%, transparent 37%),
+    radial-gradient(circle at 50% 100%, transparent 48%, rgba(245, 185, 66, 0.08) 49%, rgba(245, 185, 66, 0.08) 60%, transparent 61%);
+  background-size: 32px 16px;
+}
+
+.bg-wagara-asanoha {
+  background-image: radial-gradient(rgba(244, 63, 94, 0.12) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+

@@ -1,0 +1,129 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { requireUserId } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { canUnlockJourney } from "@/lib/journey";
+import { awardUserXP } from "@/lib/progress-service";
+
+const schema = z.object({
+  locationId: z.string(),
+  action: z.enum(["unlock", "complete", "stamp", "update_progress"]),
+  progress: z.number().min(0).max(100).optional(),
+});
+
+export async function POST(req: Request) {
+  const userId = await requireUserId();
+  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const parsed = schema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ error: "Invalid action." }, { status: 400 });
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  const locations = await prisma.journeyLocation.findMany({ orderBy: { order: "asc" } });
+  const idx = locations.findIndex((l) => l.id === parsed.data.locationId);
+  if (idx < 0) return NextResponse.json({ error: "Location not found." }, { status: 404 });
+  const loc = locations[idx];
+  const prev = idx === 0 ? null : locations[idx - 1];
+  const prevProgress = prev ? await prisma.userJourneyProgress.findUnique({ where: { userId_locationId: { userId, locationId: prev.id } } }) : null;
+  const unlockable = canUnlockJourney({
+    locationOrder: loc.order,
+    requirementXp: loc.requirementXp,
+    totalXP: user.totalXP,
+    previousCompleted: idx === 0 || prevProgress?.status === "COMPLETED",
+  });
+  if (!unlockable) return NextResponse.json({ error: "Location is locked." }, { status: 403 });
+
+  const now = new Date();
+
+  if (parsed.data.action === "unlock") {
+    const row = await prisma.userJourneyProgress.upsert({
+      where: { userId_locationId: { userId, locationId: loc.id } },
+      update: { status: "IN_PROGRESS" },
+      create: { userId, locationId: loc.id, status: "IN_PROGRESS" },
+    });
+    return NextResponse.json(row);
+  }
+
+  if (parsed.data.action === "update_progress") {
+    const progressVal = Math.min(100, Math.max(0, parsed.data.progress ?? 0));
+    const existing = await prisma.userJourneyProgress.findUnique({
+      where: { userId_locationId: { userId, locationId: loc.id } },
+    });
+    const currentStatus = existing?.status ?? "AVAILABLE";
+    const reached100 = progressVal >= 100 || (existing?.progress ?? 0) >= 100;
+    const newStatus = reached100 || currentStatus === "COMPLETED" ? "COMPLETED" : (currentStatus === "LOCKED" ? "LOCKED" : "IN_PROGRESS");
+    const row = await prisma.userJourneyProgress.upsert({
+      where: { userId_locationId: { userId, locationId: loc.id } },
+      update: {
+        progress: Math.max(existing?.progress ?? 0, progressVal),
+        status: newStatus,
+        completedAt: reached100 && !existing?.completedAt ? now : existing?.completedAt,
+      },
+      create: {
+        userId,
+        locationId: loc.id,
+        progress: progressVal,
+        status: newStatus,
+        completedAt: reached100 ? now : null,
+      },
+    });
+
+    if (reached100 && existing?.status !== "COMPLETED") {
+      const awardResult = await awardUserXP({
+        userId,
+        amount: loc.xpReward,
+        reason: "JOURNEY_COMPLETE",
+        referenceId: loc.id,
+        now,
+      });
+      return NextResponse.json({
+        ...row,
+        xpAwarded: awardResult.xpAwarded,
+        newLevel: awardResult.level,
+        newTotalXP: awardResult.totalXP,
+        leveledUp: awardResult.leveledUp,
+        newlyUnlockedAchievements: awardResult.newlyUnlockedAchievements,
+        newlyUnlockedJourney: awardResult.newlyUnlockedJourney,
+      });
+    }
+
+    return NextResponse.json(row);
+  }
+
+  if (parsed.data.action === "stamp") {
+    const row = await prisma.userJourneyProgress.upsert({
+      where: { userId_locationId: { userId, locationId: loc.id } },
+      update: { isStamped: true, stampedAt: now },
+      create: { userId, locationId: loc.id, isStamped: true, stampedAt: now },
+    });
+    return NextResponse.json(row);
+  }
+
+  const existing = await prisma.userJourneyProgress.findUnique({ where: { userId_locationId: { userId, locationId: loc.id } } });
+  if (existing?.status === "COMPLETED") return NextResponse.json({ ok: true, idempotent: true });
+
+  const row = await prisma.userJourneyProgress.upsert({
+    where: { userId_locationId: { userId, locationId: loc.id } },
+    update: { status: "COMPLETED", progress: 100, completedAt: now },
+    create: { userId, locationId: loc.id, status: "COMPLETED", progress: 100, completedAt: now },
+  });
+
+  const awardResult = await awardUserXP({
+    userId,
+    amount: loc.xpReward,
+    reason: "JOURNEY_COMPLETE",
+    referenceId: loc.id,
+    now,
+  });
+
+  return NextResponse.json({
+    ...row,
+    xpAwarded: awardResult.xpAwarded,
+    newLevel: awardResult.level,
+    newTotalXP: awardResult.totalXP,
+    leveledUp: awardResult.leveledUp,
+    newlyUnlockedAchievements: awardResult.newlyUnlockedAchievements,
+    newlyUnlockedJourney: awardResult.newlyUnlockedJourney,
+  });
+}
+

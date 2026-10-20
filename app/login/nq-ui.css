@@ -1,0 +1,62 @@
+/* Nihon Quest — trang đăng nhập. Import trực tiếp từ page.tsx nên không phụ thuộc nq-ui.css */
+/* ===== Login — redesign theo ảnh mẫu (full-bleed photo + glass card) ===== */
+.nq-auth{background:var(--nq-paper);--W:max(100vw,177.78vh)}
+.dark .nq-auth{background:var(--nq-paper)}
+.dark .nq-auth-bg::after{background:linear-gradient(180deg,rgba(11,15,25,.9),rgba(11,15,25,.75))}
+.dark .nq-auth.nq-auth .nq-auth-benefit b,.dark .nq-auth.nq-auth .nq-auth-benefit small,.dark .nq-auth.nq-auth .nq-side-jp .jp-text,.dark .nq-auth.nq-auth .nq-foot-left,.dark .nq-auth.nq-auth .nq-auth-copy>p{text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.nq-auth-bg{position:absolute;inset:0;z-index:0;pointer-events:none;background-position:50% 0}
+.nq-auth-bg::after{content:"";position:absolute;inset:0;background:none}
+.nq-auth.nq-auth .nq-auth-layout{grid-template-columns:minmax(0,1fr) minmax(400px,508px);gap:clamp(24px,4vw,64px);padding:calc(var(--W)*.026) clamp(24px,6vw,100px) 64px calc((100vw - var(--W))/2 + var(--W)*.063);max-width:none}
+.nq-auth.nq-auth .nq-auth-story{gap:calc(var(--W)*.03);padding-top:0;justify-content:flex-start}
+.nq-auth.nq-auth .nq-auth-copy{max-width:520px}
+.nq-auth.nq-auth .nq-eyebrow-dot{gap:10px;margin-bottom:8px;font-size:13px;font-weight:700;letter-spacing:.06em}
+.nq-auth.nq-auth .nq-eyebrow-dot::before{width:14px;height:14px;box-sizing:border-box;background:var(--nq-red);border:3px solid #f6c9c4;box-shadow:0 0 0 1px var(--nq-red)}
+.nq-auth.nq-auth .nq-auth-copy h1{height:calc(var(--W)*.185);margin:0;overflow:hidden;color:transparent;-webkit-text-stroke:0;text-shadow:none;user-select:none;pointer-events:none;font-size:clamp(40px,4.5vw,76px);line-height:1.2;font-weight:400}
+.nq-auth.nq-auth .nq-auth-copy>p{margin:0;max-width:410px;color:var(--nq-onboard-copy);font-size:15.5px;line-height:1.55;text-shadow:0 0 12px rgba(255,255,255,.85)}
+\1left:calc((100vw - var(--W))/2 + var(--W)*.09);bottom:clamp(56px,10vh,96px);z-index:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,1.6vw,28px);width:min(52vw,780px)}
+.nq-auth.nq-auth .nq-auth-benefit{align-items:flex-start;gap:12px}
+.nq-auth.nq-auth .nq-auth-benefit>span{width:50px;height:50px;background:var(--nq-paper);box-shadow:0 8px 20px -10px rgba(60,30,25,.4)}
+.nq-auth.nq-auth .nq-auth-benefit>span svg{width:24px;height:24px}
+.nq-auth.nq-auth .nq-auth-benefit b{font-size:15.5px;font-weight:600;line-height:1.3;text-shadow:0 0 10px rgba(255,255,255,.9)}
+.nq-auth.nq-auth .nq-auth-benefit small{max-width:190px;margin-top:6px;color:var(--nq-onboard-copy);font-size:11.5px;line-height:1.45;text-shadow:0 0 10px rgba(255,255,255,.9)}
+.nq-auth.nq-auth .nq-auth-form-wrap{justify-self:end;width:100%}
+.nq-auth.nq-auth .nq-login-card{padding:34px 48px 30px;text-align:left;border-radius:30px;background:var(--nq-login-card-bg);backdrop-filter:blur(18px) saturate(1.1);-webkit-backdrop-filter:blur(18px) saturate(1.1);box-shadow:0 40px 90px -40px rgba(70,30,20,.4),0 0 0 1px rgba(255,255,255,.85)}
+.nq-auth.nq-auth .nq-login-card h2{margin:26px 0 8px;font-size:36px;font-weight:700;color:var(--nq-ink)}
+.nq-auth.nq-auth .nq-login-sub{margin:0 0 24px;max-width:340px;font-size:14px}
+.nq-auth.nq-auth .nq-login-form{gap:16px}
+.nq-auth.nq-auth .nq-field label{margin-bottom:8px;font-size:13.5px;font-weight:700}
+.nq-auth.nq-auth .nq-input-wrap{height:52px;border-color:var(--nq-line);background:var(--nq-input-bg)}
+.nq-auth.nq-auth .nq-input-icon{color:var(--nq-input-icon)}
+.nq-auth.nq-auth .nq-password-toggle svg{width:17px;height:17px}
+.nq-auth.nq-auth .nq-remember{font-size:13px}
+.nq-auth.nq-auth .nq-submit-red{height:54px;border-radius:14px;font-size:15.5px;box-shadow:0 16px 28px -14px rgba(180,30,25,.75)}
+.nq-auth.nq-auth .nq-or{margin:18px 0 14px;font-size:12.5px}
+.nq-auth.nq-auth .nq-or span{padding:0 2px}
+.nq-google{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;height:52px;border:1px solid var(--nq-line);border-radius:14px;background:var(--nq-input-bg);font:500 14px var(--nq-font);color:var(--nq-ink);cursor:pointer;transition:background .2s,box-shadow .2s}
+.nq-google:hover{background:var(--nq-paper);box-shadow:0 8px 20px -14px rgba(0,0,0,.35)}
+.nq-google:disabled{opacity:.7;cursor:progress}
+.nq-google svg{width:20px;height:20px}
+.nq-auth.nq-auth .nq-login-footer{margin-top:22px;padding-top:18px;border-top:1px solid var(--nq-line);text-align:center;font-size:13px}
+.nq-auth.nq-auth .nq-login-footer a{margin-left:6px;font-size:13px}
+.nq-auth.nq-auth .nq-login-footer svg{width:15px;height:15px}
+.nq-mascot{position:absolute;right:-30px;bottom:-30px;width:clamp(78px,7vw,112px);height:auto;pointer-events:none;filter:drop-shadow(0 8px 10px rgba(60,30,20,.25))}
+.nq-auth.nq-auth .nq-side-jp{top:40px;right:30px;gap:12px}
+.nq-auth.nq-auth .nq-side-jp .jp-text{font-size:27px;letter-spacing:.14em;text-shadow:0 0 10px rgba(255,255,255,.8)}
+.nq-auth.nq-auth .nq-side-jp i{height:44px;background:var(--nq-ink);opacity:.7}
+.nq-auth.nq-auth .nq-side-jp svg{width:24px;height:24px;color:var(--nq-pink)}
+.nq-auth.nq-auth .nq-foot-left{left:clamp(24px,3.2vw,52px);bottom:34px;gap:14px;font-size:19px;letter-spacing:.22em;font-weight:400;color:var(--nq-ink);text-shadow:0 0 10px rgba(255,255,255,.8)}
+.nq-auth.nq-auth .nq-foot-left i{width:clamp(80px,12vw,160px);opacity:.75;background:var(--nq-ink)}
+@media (max-width:1300px){.nq-auth.nq-auth .nq-mascot{right:-10px}}
+@media (max-width:1024px){
+.nq-auth-bg{background-position:62% 0}
+.nq-auth-bg::after{background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.6))}
+.dark .nq-auth-bg::after{background:linear-gradient(180deg,rgba(11,15,25,.94),rgba(11,15,25,.86))}
+.nq-auth.nq-auth .nq-auth-copy h1{height:auto;overflow:visible;color:var(--nq-ink);pointer-events:auto;user-select:auto;-webkit-text-stroke:1px var(--nq-ink)}
+.nq-auth.nq-auth .nq-auth-copy h1 em{color:var(--nq-red);font-style:italic;-webkit-text-stroke:1px var(--nq-red)}
+.nq-auth.nq-auth .nq-auth-layout{grid-template-columns:1fr;gap:20px;padding:28px 20px 56px}
+.nq-auth.nq-auth .nq-auth-copy>p,.nq-auth.nq-auth .nq-auth-benefits,.nq-auth.nq-auth .nq-foot-left{display:none}
+.nq-auth.nq-auth .nq-auth-copy h1{font-size:clamp(34px,9vw,48px)}
+.nq-auth.nq-auth .nq-auth-form-wrap{justify-self:stretch}
+.nq-auth.nq-auth .nq-login-card{padding:28px 22px}
+.nq-auth.nq-auth .nq-login-card h2{font-size:30px;margin-top:18px}
+.nq-mascot{display:none}}
